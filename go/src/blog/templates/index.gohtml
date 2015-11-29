@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+
+<body>
+	<h1><a href="/login">LOG IN</a></h1>
+	<h1><a href="/upload">UPLOAD (only when logged in) </a></h1>
+	<h1><a href="/logout">LOG OUT</a></h1>
+	{{range .Files}}
+	<!--	<img src="{{.}}"> -->
+	<b> {{.}} </b>
+	{{else}}
+		<h1>NO Files</h1>
+	{{end}}
+</body>
+</html>
+

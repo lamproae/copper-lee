@@ -1,0 +1,52 @@
+<html>
+<head>
+	<title> Cooper Login </title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css" />
+	<script type="text/javascript" src="/js/notify.js" > </script>
+</head>
+<body>
+	<form action="login" method="post">
+		<div>
+			<table>
+				<tr> 
+					<td colspan= "2" align="center"> Welcome to www.liwei.com </td>
+				</tr>
+				<tr>
+					<td> <p> User Name: </td> <td><input type="text" name="username"> </p> </td>
+				</tr>
+				<tr>
+					<td> <p> Email: </td> <td> <input type="text" name="email"> </p> </td>
+				</tr>
+				<tr>
+					<td> <p> Phone: </td> <td> <input type="text" name="mobile"> </p> </td>
+				</tr>
+				<tr>
+					<td> <p> Password: </td> <td> <input type="password" name="password"> </p> </td>
+				</tr>
+				<tr>
+					<td colspan= "2" align="center"> <p> <input type="submit" value="登录"> </td>
+				</tr>
+				<tr>
+					<td colspan= "2" align="center"> <p> <input id="alert_button" type="button" value="alert" onclick="show_alert()"> </td>
+				</tr>
+				<tr>
+					<td colspan= "2" align="center"> <p> <input id="confirm_button" type="button" value="confirm" onclick="show_confirm()"> </td>
+				</tr>
+				<tr>
+					<td colspan= "2" align="center"> <p> <input id="prompt_button" type="button" value="promt" onclick="show_prompt()"> </td>
+				</tr>
+				<tr>
+					<td colspan= "2" align="center"> <p> <a href="/html/upload.html">Upload File</a> </p> </td>
+				</tr>
+				<tr>
+					<td colspan= "2" align="center"> <p> <a href="/html/jquery.html">Jquery Test</a> </p> </td>
+				</tr>
+				<p> <input type="hidden" name="token" value="{{.}}"> 
+			</table>
+		</div>
+	</form>
+	<marquee align="top" width="100%", height="100%", direction="left", scrollamout="3" onmouseover="this.stop()" onmouseout="this.start()">
+	Welcome to china, This is a place of Miracle!
+	</marquee>
+</body>
+</html>
