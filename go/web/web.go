@@ -4,20 +4,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-//	"net/url"
+	//	"net/url"
 	"crypto/md5"
-	"strconv"
-	"strings"
-	"regexp"
-	"path"
-	"time"
 	"io"
 	"os"
-//	"sync"
-//	"crypto/rand"
+	"path"
+	"regexp"
+	"strconv"
+	"strings"
+	"time"
+	//	"sync"
+	//	"crypto/rand"
 	"html/template"
-//	"encoding/base64"
-//	tt "text/template"
+	//	"encoding/base64"
+	//	tt "text/template"
 )
 
 /*
@@ -181,34 +181,34 @@ func login(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(h, strconv.FormatInt(curtime, 10))
 		token := fmt.Sprintf("%x", h.Sum(nil))
 		expiration := time.Now().Add(time.Duration(3600 * time.Second))
-		cookie := http.Cookie{Name: "liwei", Value:"goooooooooooogl", Expires: expiration}
-		http.SetCookie(w,&cookie)
-		cookie = http.Cookie{Name: "wxmm", Value:"zoooooooooooogl", Expires: expiration}
-		http.SetCookie(w,&cookie)
-		cookie = http.Cookie{Name: "yandz", Value:"zxxxxxxsxxxxxgl", Expires: expiration}
-		http.SetCookie(w,&cookie)
+		cookie := http.Cookie{Name: "liwei", Value: "goooooooooooogl", Expires: expiration}
+		http.SetCookie(w, &cookie)
+		cookie = http.Cookie{Name: "wxmm", Value: "zoooooooooooogl", Expires: expiration}
+		http.SetCookie(w, &cookie)
+		cookie = http.Cookie{Name: "yandz", Value: "zxxxxxxsxxxxxgl", Expires: expiration}
+		http.SetCookie(w, &cookie)
 		t, _ := template.ParseFiles("./html/login.html")
 		//w.Header().Set("Content-Type", "text/html")
 		t.Execute(w, token)
 		//t.Execute(w, sess.Get("username"))
 	} else {
-		/* 
-		rcookie, _ := r.Cookie("liwei")
-		fmt.Println(rcookie)
+		/*
+			rcookie, _ := r.Cookie("liwei")
+			fmt.Println(rcookie)
 
-		for _, rcookie = range r.Cookies() {
-			fmt.Println(rcookie);
-		}
-		fmt.Fprintf(w, "Your username is: %s\n", r.Form.Get("username"))
-		fmt.Fprintf(w, "Your telephone is: %s\n", r.Form.Get("mobile"))
-		fmt.Fprintf(w, "Your email is: %s\n", r.Form.Get("email"))
-		fmt.Fprintf(w, "Your token is: %s\n", r.Form.Get("token"))
-		fmt.Fprintf(w, "Your passord is: %s\n", r.Form.Get("password"))
-		expiration := time.Now().Add(time.Duration(3600 * time.Second))
-		cookie := http.Cookie{Name: "liwei", Value:"Gooooooooooooooooogle", Expires: expiration}
-		http.SetCookie(w,&cookie)
-		t, _ := template.ParseFiles("./html/welcome.html")
-		t.Execute(w, nil)
+			for _, rcookie = range r.Cookies() {
+				fmt.Println(rcookie);
+			}
+			fmt.Fprintf(w, "Your username is: %s\n", r.Form.Get("username"))
+			fmt.Fprintf(w, "Your telephone is: %s\n", r.Form.Get("mobile"))
+			fmt.Fprintf(w, "Your email is: %s\n", r.Form.Get("email"))
+			fmt.Fprintf(w, "Your token is: %s\n", r.Form.Get("token"))
+			fmt.Fprintf(w, "Your passord is: %s\n", r.Form.Get("password"))
+			expiration := time.Now().Add(time.Duration(3600 * time.Second))
+			cookie := http.Cookie{Name: "liwei", Value:"Gooooooooooooooooogle", Expires: expiration}
+			http.SetCookie(w,&cookie)
+			t, _ := template.ParseFiles("./html/welcome.html")
+			t.Execute(w, nil)
 		*/
 		//sess.Set("username", r.Form.Get("username"))
 		http.Redirect(w, r, "./html/welcome.html", 302)
@@ -235,10 +235,10 @@ func upload(w http.ResponseWriter, r *http.Request) {
 		}
 
 		defer file.Close()
-		/* 
-		fmt.Fprintf(w, "%v", handler.Header)
+		/*
+			fmt.Fprintf(w, "%v", handler.Header)
 		*/
-		f, err := os.OpenFile("./test/" + handler.Filename, os.O_WRONLY | os.O_CREATE, 0666)
+		f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
 			fmt.Println(r.FormFile("uploadfile"))
 			fmt.Println(err)
@@ -254,9 +254,9 @@ func upload(w http.ResponseWriter, r *http.Request) {
 }
 
 func Jsload(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm();
+	r.ParseForm()
 	if r.Method == "GET" {
-		fmt.Println("path: %s\n",  r.URL.Path)
+		fmt.Println("path: %s\n", r.URL.Path)
 		if m, _ := regexp.MatchString("^/js", r.URL.Path); m {
 			file := path.Base(r.URL.Path)
 			file = "./js/" + file
@@ -268,9 +268,9 @@ func Jsload(w http.ResponseWriter, r *http.Request) {
 }
 
 func CSSload(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm();
+	r.ParseForm()
 	if r.Method == "GET" {
-		fmt.Println("path: %s\n",  r.URL.Path)
+		fmt.Println("path: %s\n", r.URL.Path)
 		if m, _ := regexp.MatchString("^/css", r.URL.Path); m {
 			file := path.Base(r.URL.Path)
 			fmt.Println(file)
@@ -283,9 +283,9 @@ func CSSload(w http.ResponseWriter, r *http.Request) {
 }
 
 func HTMLload(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm();
+	r.ParseForm()
 	if r.Method == "GET" {
-		fmt.Println("path: %s\n",  r.URL.Path)
+		fmt.Println("path: %s\n", r.URL.Path)
 		if m, _ := regexp.MatchString("^/html", r.URL.Path); m {
 			file := path.Base(r.URL.Path)
 			fmt.Println(file)
@@ -298,16 +298,16 @@ func HTMLload(w http.ResponseWriter, r *http.Request) {
 }
 
 func download(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm();
+	r.ParseForm()
 	if r.Method == "GET" {
-		fmt.Println("path: %s\n",  r.URL.Path)
+		fmt.Println("path: %s\n", r.URL.Path)
 		if m, _ := regexp.MatchString("^/test", r.URL.Path); m {
 			file := path.Base(r.URL.Path)
 			fmt.Println(file)
 			file = "./test/" + file
 			fmt.Println(file)
 			f, err := os.Open(file)
-			if err !=  nil {
+			if err != nil {
 				http.Error(w, "file not found", 404)
 				return
 			}
