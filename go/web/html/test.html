@@ -1,0 +1,45 @@
+<head>
+<script type="text/javascript", src="/js/test.js"> </script>
+</head>
+<body>
+	<ul>
+		<li><a href="#"> A </a> </li>
+		<li><a href="#"> B </a> </li>
+		<li><a href="#"> C </a> </li>
+	</ul>
+	<ul id="nav">
+		<li> Home </li>
+		<li> <a href="a.html">Courses</a></li>
+		<li> <a href="b.html">Discuss</a></li>
+		<li> <a href="c.html">Learners</a></li>
+		<li> <a href="blog.html">Blog</a></li>
+		<li> <a href="contact.html">Contact</a></li>
+	</ul>
+	<button onclick="alert('This is an alert');"> Click Me</button>
+	<button id="demo">Start</button>
+	<script> 
+var a = document.getElementsByTagName("li");
+var b = a[2].firstChild;
+b.innerHTML = "D";
+
+var c = document.body.childNodes;
+var txt = "";
+for (var k = 0; k < c.length; k++) {
+	txt += c[k].nodeType + " ";
+}
+alert(txt)
+
+	var list = document.getElementById("nav");
+	var listItem = list.getElementsByTagName("li")[2];
+	list.removeChild(listItem);
+
+	var btn = document.getElementById("demo");
+	btn.AddEventListener("click", myFunction);
+
+	function myFunction() {
+		alert(Math.random());
+		btn.removeEventListener("click", myFunction);
+	}
+	</script>
+
+</body>

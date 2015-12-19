@@ -17,7 +17,7 @@ import (
 	//	"crypto/rand"
 	"html/template"
 	//	"encoding/base64"
-	//	tt "text/template"
+	tt "text/template"
 )
 
 /*
@@ -256,12 +256,14 @@ func upload(w http.ResponseWriter, r *http.Request) {
 func Jsload(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	if r.Method == "GET" {
+		//	w.Header().Set("Content-type", "text/html; charset=utf-8")
+		w.Header().Set("Content-Type", "application/javascript")
 		fmt.Println("path: %s\n", r.URL.Path)
 		if m, _ := regexp.MatchString("^/js", r.URL.Path); m {
 			file := path.Base(r.URL.Path)
 			file = "./js/" + file
 			fmt.Println(file)
-			t, _ := template.ParseFiles(file)
+			t, _ := tt.ParseFiles(file)
 			t.Execute(w, nil)
 		}
 	}

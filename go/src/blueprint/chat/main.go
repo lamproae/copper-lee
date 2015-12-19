@@ -47,7 +47,8 @@ func main() {
 		google.New("871487773908-kncl76ts3iisb3i3ua9r1gs1gns52pa9.apps.googleusercontent.com", "gTqMM6jUo7ogy5YnpfRDtISj", "http://www.kkkmmu.com:8080/auth/callback/google"),
 	)
 
-	r := newRoom()
+	//r := newRoom(UserAuthAvatar)
+	r := newRoom(UseGravatar)
 	r.tracer = trace.New(os.Stdout)
 	http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
 	http.Handle("/login", &templateHandler{filename: "login.html"})
@@ -55,6 +56,19 @@ func main() {
 	http.Handle("/room", r)
 	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir("./assets"))))
 	http.HandleFunc("/auth/", loginHandler)
+	http.Handle("/upload", &templateHandler{filename: "upload.html"})
+	http.HandleFunc("/uploader", uploaderHandler)
+	http.Handle("/avatars/", http.StripPrefix("/avatars/", http.FileServer(http.Dir("./avatars"))))
+	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		http.SetCookie(w, &http.Cookie{
+			Name:   "auth",
+			Value:  "",
+			Path:   "/",
+			MaxAge: -1,
+		})
+		w.Header()["Location"] = []string{"/chat"}
+		w.WriteHeader(http.StatusTemporaryRedirect)
+	})
 	go r.run()
 	log.Println("Starting web server on", *addr)
 	if err := http.ListenAndServe(*addr, nil); err != nil {
