@@ -330,7 +330,7 @@ func main() {
 	http.HandleFunc("/js/", Jsload)
 	http.HandleFunc("/css/", CSSload)
 
-	err := http.ListenAndServe(":9090", nil)
+	err := http.ListenAndServe("192.168.1.102:9090", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe err: ", err)
 	}
