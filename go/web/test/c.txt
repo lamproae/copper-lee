@@ -1,0 +1,150 @@
+// DEFINE CHART PLUGINS
+AmCharts.averageGraphs = 0;
+AmCharts.addMovingAverage = function (dataSet, panel, field, graph) {
+    // update dataset
+    var avgField = "avg"+AmCharts.averageGraphs;
+    dataSet.fieldMappings.push({
+        fromField: avgField,
+        toField: avgField});
+    
+    // calculate moving average
+    var fc = 0;
+    var sum = 0;
+    for (var i = 0; i < dataSet.dataProvider.length; i++) {
+        var dp = dataSet.dataProvider[i];
+        if (dp[field] !== undefined) {
+            sum += dp[field];
+            fc++;
+            dp[avgField] = Math.round(sum / fc * 10) / 10;
+        }
+    }
+    
+    // create a graph
+    graph.valueField = avgField;
+    panel.stockGraphs.push(graph);
+    
+    // increment average graph count
+    AmCharts.averageGraphs++;
+}
+
+// CHART DATA
+var chartData = [];
+generateChartData();
+function generateChartData() {
+	var firstDate = new Date();
+	firstDate.setDate(firstDate.getDate() - 500);
+	firstDate.setHours(0, 0, 0, 0);
+
+	for (var i = 0; i < 500; i++) {
+		var newDate = new Date(firstDate);
+		newDate.setDate(newDate.getDate() + i);
+
+		var a = Math.round(Math.random() * (40 + i)) + 100 + i;
+		var b = Math.round(Math.random() * (1000 + i)) + 500 + i * 2;
+
+		chartData.push({
+			date: newDate,
+			value: a,
+			volume: b
+		});
+	}
+}
+
+// CHART CONFIG
+var chartConfig = {
+	type: "stock",
+    "theme": "none",
+    pathToImages: "http://www.amcharts.com/lib/3/images/",
+
+	dataSets: [{
+			title: "data set",
+			fieldMappings: [{
+				fromField: "value",
+				toField: "value"
+			}, {
+				fromField: "volume",
+				toField: "volume"
+			}],
+			dataProvider: chartData,
+			categoryField: "date"
+		}
+	],
+
+	panels: [{
+
+			showCategoryAxis: false,
+			title: "Value",
+			percentHeight: 70,
+
+			stockGraphs: [{
+				id: "g1",
+
+				valueField: "value",
+				comparable: true,
+				compareField: "value",
+				balloonText: "[[title]]:<b>[[value]]</b>",
+				compareGraphBalloonText: "[[title]]:<b>[[value]]</b>"
+			}],
+
+			stockLegend: {
+				periodValueTextComparing: "[[percents.value.close]]%",
+				periodValueTextRegular: "[[value.close]]"
+			}
+		},
+
+		{
+			title: "Volume",
+			percentHeight: 30,
+			stockGraphs: [{
+				valueField: "volume",
+				type: "column",
+				showBalloon: false,
+				fillAlphas: 1
+			}],
+
+
+			stockLegend: {
+				periodValueTextRegular: "[[value.close]]"
+			}
+		}
+	],
+
+	chartScrollbarSettings: {
+		graph: "g1"
+	},
+
+	chartCursorSettings: {
+		valueBalloonsEnabled: true,
+        fullWidth:true,
+        cursorAlpha:0.1
+	},
+
+	periodSelector: {
+		periods: [{
+			period: "MM",
+			selected: true,
+			count: 1,
+			label: "1 month"
+		}, {
+			period: "YYYY",
+			count: 1,
+			label: "1 year"
+		}, {
+			period: "YTD",
+			label: "YTD"
+		}, {
+			period: "MAX",
+			label: "MAX"
+		}]
+	}
+}
+
+// ADD INDICATORS
+AmCharts.addMovingAverage(chartConfig.dataSets[0], chartConfig.panels[0], 'value', {
+    useDataSetColors: false,
+    color: "#ccffcc",
+    title: "Moving average"
+});
+
+// CREATE CHART
+var chart = AmCharts.makeChart("chartdiv", chartConfig);
