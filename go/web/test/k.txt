@@ -1,59 +1,60 @@
-/**
+	/**
  * Loads the external CSV file
  */
-AmCharts.loadCSV = function( file ) {
-  if ( window.XMLHttpRequest ) {
+AmCharts.loadCSV = function (file) {
+  if (window.XMLHttpRequest) {
     // IE7+, Firefox, Chrome, Opera, Safari
     var request = new XMLHttpRequest();
   } else {
     // code for IE6, IE5
-    var request = new ActiveXObject( 'Microsoft.XMLHTTP' );
+    var request = new ActiveXObject('Microsoft.XMLHTTP');
   }
   // load
   try {
-    request.open( 'GET', file, false );
+    request.open('GET', file, false);
     request.send();
-    if ( 200 != request.status )
+    if (200 != request.status)
       return [];
-  } catch ( e ) {
+  }
+  catch(e) {
     return [];
   }
-  return AmCharts.parseCSV( request.responseText );
+  return AmCharts.parseCSV(request.responseText);
 }
 
 /**
  * Parses CSV file
  */
-AmCharts.parseCSV = function( data ) {
+AmCharts.parseCSV = function (data) {
   // init empty data array
   var chartData = []
 
   //replace UNIX new lines
-  data = data.replace( /\r\n/g, "\n" );
+  data = data.replace(/\r\n/g, "\n");
   //replace MAC new lines
-  data = data.replace( /\r/g, "\n" );
+  data = data.replace(/\r/g, "\n");
   //split into rows
-  var rows = data.split( "\n" );
+  var rows = data.split("\n");
 
   // first line contains field names
-  var fields = rows.shift().split( "," );
+  var fields = rows.shift().split(",");
 
   // loop through all rows
   var row;
-  while ( row = rows.pop() ) {
+  while( row = rows.pop()) {
     // our columns are separated by comma
-    var column = row.split( "," );
+    var column = row.split(",");
 
     // init data object
     var dataObject = {};
 
     // add data for all the fields
-    for ( var x in column ) {
-      dataObject[ fields[ x ] ] = column[ x ];
+    for(var x in column) {
+      dataObject[fields[x]] = column[x];
     }
 
     // add object to chartData array
-    chartData.push( dataObject );
+    chartData.push(dataObject);
   }
 
   return chartData;
@@ -63,18 +64,18 @@ AmCharts.parseCSV = function( data ) {
  * Delay loading by a few moments so that the page has a chace to build itself
  */
 
-setTimeout( function() {
+setTimeout(function () {
 
   /**
    * Define all data sets
    */
-  var indices = [ 'MSFT', 'TXN' ];
+  var indices = ['MSFT', 'INTC', 'TXN', 'AAPL'];
   var dataSets = [];
-  for ( var x in indices ) {
+  for (var x in indices) {
     // load events
-    var events = AmCharts.loadCSV( '/wp-content/uploads/demos/stock/' + indices[ x ] + '_events.csv' );
-    for ( var e in events ) {
-      switch ( events[ e ].Type ) {
+    var events = AmCharts.loadCSV('/wp-content/uploads/demos/stock/optimized2/'+indices[x]+'_events.csv');
+    for(var e in events) {
+      switch(events[e].Type) {
         case 'A':
           var color = "#85CDE6";
           break;
@@ -82,24 +83,27 @@ setTimeout( function() {
           var color = "#cccccc";
           break;
       }
-      if ( events[ e ].Description !== undefined )
-      	events[ e ].Description = events[ e ].Description.replace( "Upgrade", "<strong style=\"color: #0c0\">Upgrade</strong>" ).replace( "Downgrade", "<strong style=\"color: #c00\">Downgrade</strong>" );
+      if ( events[e].Description !== undefined )
+      	events[e].Description = events[e].Description.replace("Upgrade", "<strong style=\"color: #0c0\">Upgrade</strong>").replace("Downgrade", "<strong style=\"color: #c00\">Downgrade</strong>");
       else
-        events[ e ].Description = "";
-      events[ e ] = {
+        events[e].Description = "";
+      events[e] = {
         type: "pin",
         graph: "g1",
         backgroundColor: color,
-        date: events[ e ].Date,
-        text: events[ e ].Type,
-        description: "<strong>" + events[ e ].Title + "</strong><br />" + events[ e ].Description
+        date: events[e].Date,
+        text: events[e].Type,
+        description: "<strong>" + events[e].Title + "</strong><br />" + events[e].Description
       };
     }
 
     // add data set
-    dataSets.push( {
-      title: indices[ x ],
-      fieldMappings: [ {
+    dataSets.push({
+      title: indices[x],
+      fieldMappings: [{
+        fromField: "Adj Close",
+        toField: "value"
+      }, {
         fromField: "Open",
         toField: "open"
       }, {
@@ -114,35 +118,36 @@ setTimeout( function() {
       }, {
         fromField: "Volume",
         toField: "volume"
-      } ],
-      compared: x != 0,
-      dataProvider: AmCharts.loadCSV( '/wp-content/uploads/demos/stock/' + indices[ x ] + '.csv' ),
+      }],
+      compared: (x > 0) && (x < 3),
+      dataProvider: AmCharts.loadCSV('/wp-content/uploads/demos/stock/optimized2/'+indices[x]+'.csv'),
       categoryField: "Date",
       stockEvents: events
-    } );
+    });
   }
 
   /**
    * Build the chart
    */
-  var chart = AmCharts.makeChart( "chartdiv", {
+  var chart = AmCharts.makeChart("chartdiv-0", {
     type: "stock",
+    theme: "dark",
     color: "#fff",
     dataSets: dataSets,
     dataDateFormat: "YYYY-MM-DD",
 
-    panels: [ {
+    panels: [{
         title: "Value",
         percentHeight: 70,
 
-        stockGraphs: [ {
+        stockGraphs: [{
           type: "candlestick",
           id: "g1",
           openField: "open",
           closeField: "close",
           highField: "high",
           lowField: "low",
-          valueField: "close",
+          valueField: "value",
           lineColor: "#fff",
           fillColors: "#fff",
           negativeLineColor: "#db4c3c",
@@ -152,10 +157,10 @@ setTimeout( function() {
           columnWidth: 0.7,
           useDataSetColors: false,
           comparable: true,
-          compareField: "close",
+          compareField: "value",
           showBalloon: false,
           proCandlesticks: true
-        } ],
+        }],
 
         stockLegend: {
           valueTextRegular: undefined,
@@ -171,7 +176,7 @@ setTimeout( function() {
         columnWidth: 0.6,
         showCategoryAxis: false,
 
-        stockGraphs: [ {
+        stockGraphs: [{
           valueField: "volume",
           openField: "open",
           type: "column",
@@ -182,7 +187,7 @@ setTimeout( function() {
           negativeLineColor: "#db4c3c",
           negativeFillColors: "#db4c3c",
           useDataSetColors: false
-        } ],
+        }],
 
         stockLegend: {
           markerType: "none",
@@ -191,16 +196,20 @@ setTimeout( function() {
           periodValueTextRegular: "[[value.close]]"
         },
 
-        valueAxes: [ {
+        valueAxes: [{
           usePrefixes: true
-        } ]
+        }]
       }
     ],
+            
+    dataSetSelector: {
+      position: "left"
+    },
 
     panelsSettings: {
       color: "#fff",
-      plotAreaFillColors: "#333",
-      plotAreaFillAlphas: 1,
+      plotAreaFillColors: "#000",
+      plotAreaFillAlphas: 0.2,
       marginLeft: 60,
       marginTop: 5,
       marginBottom: 5
@@ -209,27 +218,23 @@ setTimeout( function() {
     chartScrollbarSettings: {
       graph: "g1",
       graphType: "line",
-      usePeriod: "WW",
-      backgroundColor: "#333",
-      graphFillColor: "#666",
-      graphFillAlpha: 0.5,
-      gridColor: "#555",
-      gridAlpha: 1,
-      selectedBackgroundColor: "#444",
-      selectedGraphFillAlpha: 1
+      usePeriod: "WW"
+
     },
 
     categoryAxesSettings: {
       equalSpacing: true,
-      gridColor: "#555",
-      gridAlpha: 1
+      gridColor: "#FFFFFF",
+      gridAlpha: 0.1,
+      dashLength: 0
     },
 
     valueAxesSettings: {
-      gridColor: "#555",
-      gridAlpha: 1,
+      gridColor: "#FFFFFF",
+      gridAlpha: 0.1,
       inside: false,
-      showLastLabel: true
+      showLastLabel: true,
+      dashLength: 0
     },
 
     chartCursorSettings: {
@@ -252,15 +257,12 @@ setTimeout( function() {
     },
 
     periodSelector: {
-      position: "bottom",
-      periods: [ {
+      position: "left",
+      periodsText: "",
+      periods: [{
         period: "DD",
         count: 10,
         label: "10D"
-      }, {
-        period: "MM",
-        count: 1,
-        label: "1M"
       }, {
         period: "MM",
         count: 6,
@@ -280,12 +282,8 @@ setTimeout( function() {
       }, {
         period: "MAX",
         label: "MAX"
-      } ]
-    },
-    "export": {
-      "enabled": true,
-      "backgroundColor": "#000"
+      }]
     }
-  } );
+  });
 
-}, 500 );
+}, 1000);
