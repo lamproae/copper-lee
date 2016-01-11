@@ -94,8 +94,8 @@ func main() {
 	http.HandleFunc("/", mainPage)
 	http.HandleFunc("/assets/", assetsLoad)
 
-	err := http.ListenAndServe("192.168.1.102:8880", nil)
-	//err := http.ListenAndServe("10.71.1.77:8880", nil)
+	//err := http.ListenAndServe("192.168.1.102:8880", nil)
+	err := http.ListenAndServe("10.71.1.93:8880", nil)
 	checkErorr(err)
 }
 
