@@ -230,7 +230,7 @@ func upload(w http.ResponseWriter, r *http.Request) {
 		r.ParseMultipartForm(32 << 20)
 		file, handler, err := r.FormFile("uploadfile")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println(err.Error())
 			return
 		}
 
@@ -330,8 +330,8 @@ func main() {
 	http.HandleFunc("/js/", Jsload)
 	http.HandleFunc("/css/", CSSload)
 
-	err := http.ListenAndServe("10.71.1.99:9090", nil)
-	//err := http.ListenAndServe("192.168.1.102:9090", nil)
+	//err := http.ListenAndServe("10.71.1.124:9090", nil)
+	err := http.ListenAndServe("192.168.1.103:9090", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe err: ", err)
 	}
